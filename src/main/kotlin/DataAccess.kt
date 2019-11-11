@@ -1,10 +1,11 @@
-import kotlinx.coroutines.selects.select
+import Deals.dealCount
+import Deals.ruleName
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun main() {
+fun initExposedDB() {
     Database.connect(
         "jdbc:sqlserver://195.123.175.230:11433",
         user = "telegram_bot",
@@ -24,16 +25,22 @@ fun main() {
     }
 }
 
+fun executeStuckInDistribution(): List<Deal> {
+    return transaction {
+        Deals.selectAll().map {
+            Deal(it[dealCount], it[ruleName])
+        }
+    }
+}
+
 object Settings : Table("AnalyticData.dbo.bot_configuration") {
     val name = varchar("NAME", length = 64) // Column<String>
     val value = varchar("VALUE", length = 256) // Column<String>
 }
 
-object Deals : Table("AnalyticData.dbo.bot_rule_razdachi"){
+object Deals : Table("AnalyticData.dbo.bot_rule_razdachi") {
     val dealCount = integer("DEALS")
     val ruleName = varchar("RULE", length = 64)
 }
 
-inline fun <reified T>oioi(){
-
-}
+data class Deal(val dealCount: Int, val ruleName: String)
