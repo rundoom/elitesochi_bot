@@ -18,6 +18,14 @@ val bot = bot {
         command("my_chat_id") { bot, update ->
             bot.sendMessage(chatId = update.message!!.chat.id, text = update.message!!.chat.id.toString())
         }
+        command("force_email") { bot, update ->
+            executeEmailSending()
+            bot.sendMessage(chatId = update.message!!.chat.id, text = "Сообщения разосланы на электронную почту")
+        }
+        command("force_tg_send") { bot, update ->
+            executeTrainersStop()
+            bot.sendMessage(chatId = update.message!!.chat.id, text = "Сообщения разосланы в Телеграм")
+        }
     }
 }
 
