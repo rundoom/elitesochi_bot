@@ -12,24 +12,25 @@ fun initExposedDB() {
         password = "TS^gvS^StS8S8HS5SZ6tzxgx66ss6",
         driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
     )
-//    transaction {
-//        connection.createStatement().execute("{call [AnalyticData].[dbo].[p_telegram_trainers_stops]}")
-//    }
-//    println()
-
-    transaction {
-        val settings = Settings.selectAll()
-        val deals = Deals.selectAll()
-        println(settings)
-        println(deals)
-    }
 }
 
-fun executeStuckInDistribution(): List<Deal> {
+fun getStuckInDistribution(): List<Deal> {
     return transaction {
         Deals.selectAll().map {
             Deal(it[dealCount], it[ruleName])
         }
+    }
+}
+
+fun executeTrainersStop() {
+    transaction {
+        connection.createStatement().execute("{call [AnalyticData].[dbo].[p_telegram_trainers_stops]}")
+    }
+}
+
+fun executeEmailSending() {
+    transaction {
+        connection.createStatement().execute("{call [AnalyticData].[dbo].[p_newbuilding_need_update_email]}")
     }
 }
 
