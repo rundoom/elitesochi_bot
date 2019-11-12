@@ -3,27 +3,38 @@ package web
 import Trainer
 import getStuckInDistribution
 
-fun generateTrainerMessagesBody(trainers: List<Trainer>): List<Pair<Long, String>> {
+
+fun splitByTrainersSegments(trainers: List<Trainer>): List<Map<String, List<Trainer>>> {
     val trainersByChatId = trainers.groupBy { it.chatId }.toList()
 
     return trainersByChatId.map { chatToUsers ->
-        val segmented = chatToUsers.second.groupBy { it.segment }.toList()
+        chatToUsers.second.groupBy { it.segment }
+    }
+}
 
-        chatToUsers.first to segmented.joinToString("\n") { segment ->
-            "------------------\n${segment.first}:\n" +
-                    segment.second.joinToString("\n\n") { "${it.username}\n${it.phone}" }
-        }
+fun generateTrainerMessagesBody(trainers: List<Map<String, List<Trainer>>>): List<Pair<Long, String>> {
+    return trainers.map { segmented ->
+        segmented.values.first().first().chatId to segmented.toList().joinToString("\n------------------") { paired ->
+            "\n${paired.first}:\n\n" +
+                    paired.second.joinToString("\n\n") { "${it.username}\n${it.phone}" }
+        } + "\n------------------"
     }
 }
 
 fun prepareTrainerFullMessages(bodyMessages: List<Pair<Long, String>>, header: String): List<Pair<Long, String>> {
     return bodyMessages.map {
-        it.first to "$header\n${it.second}\n------------------\n$header"
+        it.first to "$header\n------------------\n*ИХ МОЖНО ПРИЗВАТЬ:*${it.second}\n$header"
     }
 }
 
 fun formatStuckInDistribution(): String {
     return "*ЗАВИСЛИ В РАЗДАЧЕ:*\n" + getStuckInDistribution().joinToString("\n") {
         "${it.ruleName}: ${it.dealCount}"
+    }
+}
+
+fun prepareManagerMessage(trainersSplit: List<Map<String, List<Trainer>>>, header: String): String {
+    return "$header\n------------------\n*ИХ МОЖНО ПРИЗВАТЬ:*\n" + trainersSplit.joinToString("\n") { trainer ->
+        trainer.values.first().first().name + ": " + trainer.toList().joinToString(" ") { "${it.first}: ${it.second.size}" }
     }
 }

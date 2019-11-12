@@ -23,6 +23,8 @@ import sendBotMessage
 
 val gson = Gson()
 
+val managersList = listOf<Long>(153174359)
+
 fun Application.serve() {
     install(Authentication) {
         basic("SQL Server") {
@@ -40,16 +42,22 @@ fun Application.serve() {
     routing {
         authenticate("SQL Server") {
             post("/elitesochi/send_messages") {
-                //                val trainers = call.receive<List<Trainer>>()
                 val trainers = gson.fromJson<List<Trainer>>(call.receive(JsonArray::class))
 
-                val trainerMessages = generateTrainerMessagesBody(trainers)
+                val trainersSplit = splitByTrainersSegments(trainers)
+                val trainersMessages = generateTrainerMessagesBody(trainersSplit)
                 val distributionHeader = formatStuckInDistribution()
 
-                val trainersFullMessages = prepareTrainerFullMessages(trainerMessages, distributionHeader)
+                val trainersFullMessages = prepareTrainerFullMessages(trainersMessages, distributionHeader)
 
                 trainersFullMessages.forEach {
                     sendBotMessage(it.first, it.second)
+                }
+
+                val managerMessage = prepareManagerMessage(trainersSplit, distributionHeader)
+
+                managersList.forEach {
+                    sendBotMessage(it, managerMessage)
                 }
 
                 call.respond(HttpStatusCode.OK, trainersFullMessages)
