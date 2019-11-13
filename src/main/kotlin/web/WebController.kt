@@ -1,6 +1,6 @@
 package web
 
-import Trainer
+import data.Trainer
 import com.github.salomonbrys.kotson.fromJson
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -19,9 +19,9 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import sendBotMessage
+import bot.sendBotMessage
 
-val gson = Gson()
+private val gson = Gson()
 
 val managersList = listOf<Long>(153174359)
 

@@ -1,0 +1,23 @@
+{
+  "bot": {
+    "token": "999140102:AAGEEMIX9P0udqdGGFwNopaLCeXJxdSuJHY",
+    "proxy": {
+      "host": "10.10.1.91",
+      "port": 9050
+    }
+  },
+  "web": {
+    "host": "0.0.0.0",
+    "port": 9090
+  },
+  "data": {
+    "jdbc_url": "jdbc:sqlserver://195.123.175.230:11433",
+    "user": "telegram_bot",
+    "password": "TS^gvS^StS8S8HS5SZ6tzxgx66ss6"
+  },
+  "ssl": {
+    "keyAlias": "mykey",
+    "keyStorePassword": "changeit",
+    "privateKeyPassword": "changeit"
+  }
+}

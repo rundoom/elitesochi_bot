@@ -1,5 +1,10 @@
 package web
 
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.int
+import com.github.salomonbrys.kotson.string
+import configs
+
 import io.ktor.network.tls.certificates.generateCertificate
 import io.ktor.server.engine.applicationEngineEnvironment
 import io.ktor.server.engine.embeddedServer
@@ -25,11 +30,11 @@ fun startServer() {
             }
             sslConnector(
                 keyStore = keyStore,
-                keyAlias = "mykey",
-                keyStorePassword = { "changeit".toCharArray() },
-                privateKeyPassword = { "changeit".toCharArray() }) {
-                host = "0.0.0.0"
-                port = 9090
+                keyAlias = configs["ssl"]["keyAlias"].string,
+                keyStorePassword = { configs["ssl"]["keyStorePassword"].string.toCharArray() },
+                privateKeyPassword = { configs["ssl"]["privateKeyPassword"].string.toCharArray() }) {
+                host = configs["web"]["host"].string
+                port = configs["web"]["port"].int
             }
         }
     ).start(wait = true)

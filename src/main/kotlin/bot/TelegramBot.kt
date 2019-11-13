@@ -1,3 +1,11 @@
+package bot
+
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.int
+import com.github.salomonbrys.kotson.string
+import configs
+import data.executeEmailSending
+import data.executeTrainersStop
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import me.ivmg.telegram.bot
@@ -10,8 +18,11 @@ import java.net.Proxy
 
 
 val bot = bot {
-    token = "999140102:AAGEEMIX9P0udqdGGFwNopaLCeXJxdSuJHY"
-    proxy = Proxy(Proxy.Type.SOCKS, InetSocketAddress("10.10.1.91", 9050))
+    token = configs["bot"]["token"].string
+    proxy = Proxy(
+        Proxy.Type.SOCKS,
+        InetSocketAddress(configs["bot"]["proxy"]["host"].string, configs["bot"]["proxy"]["port"].int)
+    )
     logLevel = HttpLoggingInterceptor.Level.NONE
 
     dispatch {
@@ -33,6 +44,6 @@ fun initTelegramBot() {
     GlobalScope.launch { bot.startPolling() }
 }
 
-fun sendBotMessage(chatId: Long, message: String){
+fun sendBotMessage(chatId: Long, message: String) {
     bot.sendMessage(chatId, message, ParseMode.MARKDOWN)
 }

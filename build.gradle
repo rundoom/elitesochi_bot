@@ -53,4 +53,9 @@ shadowJar {
     manifest {
         attributes "Main-Class": "MainKt"
     }
+
+    copy {
+        from 'config.json'
+        into "${libsDir.path}"
+    }
 }

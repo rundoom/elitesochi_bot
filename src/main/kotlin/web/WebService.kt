@@ -1,7 +1,7 @@
 package web
 
-import Trainer
-import getStuckInDistribution
+import data.Trainer
+import data.getStuckInDistribution
 
 
 fun splitByTrainersSegments(trainers: List<Trainer>): List<Map<String, List<Trainer>>> {

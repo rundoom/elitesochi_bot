@@ -1,5 +1,10 @@
-import Deals.dealCount
-import Deals.ruleName
+package data
+
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.string
+import configs
+import data.Deals.dealCount
+import data.Deals.ruleName
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
@@ -7,9 +12,9 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun initExposedDB() {
     Database.connect(
-        "jdbc:sqlserver://195.123.175.230:11433",
-        user = "telegram_bot",
-        password = "TS^gvS^StS8S8HS5SZ6tzxgx66ss6",
+        url = configs["data"]["jdbc_url"].string,
+        user = configs["data"]["user"].string,
+        password = configs["data"]["password"].string,
         driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
     )
 }
