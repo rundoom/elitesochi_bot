@@ -5,6 +5,8 @@ import com.github.salomonbrys.kotson.string
 import configs
 import data.Deals.dealCount
 import data.Deals.ruleName
+import data.Settings.name
+import data.Settings.value
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.selectAll
@@ -39,6 +41,14 @@ fun executeEmailSending() {
     }
 }
 
+fun getSettings(): List<Setting> {
+    return transaction {
+        Settings.selectAll().map {
+            Setting(it[name], it[value])
+        }
+    }
+}
+
 object Settings : Table("AnalyticData.dbo.bot_configuration") {
     val name = varchar("NAME", length = 64) // Column<String>
     val value = varchar("VALUE", length = 256) // Column<String>
@@ -50,3 +60,4 @@ object Deals : Table("AnalyticData.dbo.bot_rule_razdachi") {
 }
 
 data class Deal(val dealCount: Int, val ruleName: String)
+data class Setting(val name: String, val value: String)

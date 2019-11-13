@@ -19,10 +19,12 @@ import java.net.Proxy
 
 val bot = bot {
     token = configs["bot"]["token"].string
-    proxy = Proxy(
+
+    proxy = if(!configs["bot"]["proxy"].isJsonNull) Proxy(
         Proxy.Type.SOCKS,
         InetSocketAddress(configs["bot"]["proxy"]["host"].string, configs["bot"]["proxy"]["port"].int)
-    )
+    ) else Proxy.NO_PROXY
+
     logLevel = HttpLoggingInterceptor.Level.NONE
 
     dispatch {

@@ -20,10 +20,14 @@ import io.ktor.response.respond
 import io.ktor.routing.post
 import io.ktor.routing.routing
 import bot.sendBotMessage
+import com.github.salomonbrys.kotson.array
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.long
+import configs
+import data.getSettings
+import io.ktor.routing.get
 
 private val gson = Gson()
-
-val managersList = listOf<Long>(153174359)
 
 fun Application.serve() {
     install(Authentication) {
@@ -50,17 +54,21 @@ fun Application.serve() {
 
                 val trainersFullMessages = prepareTrainerFullMessages(trainersMessages, distributionHeader)
 
-                trainersFullMessages.forEach {
+                trainersFullMessages.parallelStream().forEach {
                     sendBotMessage(it.first, it.second)
                 }
 
                 val managerMessage = prepareManagerMessage(trainersSplit, distributionHeader)
 
-                managersList.forEach {
-                    sendBotMessage(it, managerMessage)
+                configs["bot"]["manager_list"].array.toList().parallelStream().forEach {
+                    sendBotMessage(it.long, managerMessage)
                 }
 
                 call.respond(HttpStatusCode.OK, trainersFullMessages)
+            }
+
+            get("/elitesochi/get_settings") {
+                call.respond(getSettings())
             }
         }
     }

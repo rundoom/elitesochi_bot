@@ -16,7 +16,7 @@ fun generateTrainerMessagesBody(trainers: List<Map<String, List<Trainer>>>): Lis
     return trainers.map { segmented ->
         segmented.values.first().first().chatId to segmented.toList().joinToString("\n------------------") { paired ->
             "\n${paired.first}:\n\n" +
-                    paired.second.joinToString("\n\n") { "${it.username}\n${it.phone}" }
+                    paired.second.sortedBy { it.got }.joinToString("\n\n") { "${it.username}\n${it.phone}" }
         } + "\n------------------"
     }
 }
