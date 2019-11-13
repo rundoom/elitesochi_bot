@@ -46,6 +46,6 @@ fun initTelegramBot() {
     GlobalScope.launch { bot.startPolling() }
 }
 
-fun sendBotMessage(chatId: Long, message: String) {
-    bot.sendMessage(chatId, message, ParseMode.MARKDOWN)
+fun sendBotMessage(chatId: Long, message: String, parseMode: ParseMode? = ParseMode.MARKDOWN) {
+    bot.sendMessage(chatId, message, parseMode)
 }

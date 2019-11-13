@@ -38,3 +38,11 @@ fun prepareManagerMessage(trainersSplit: List<Map<String, List<Trainer>>>, heade
         trainer.values.first().first().name + ": " + trainer.toList().joinToString(" ") { "${it.first}: ${it.second.size}" }
     }
 }
+
+fun prepareBroadcastMessage(tableData: List<Map<String, String>>, header: String): String {
+    return header + "\n\n" + tableData.mapIndexed { index, entry ->
+        "${index + 1}.\n" + entry.toList().joinToString("\n") {
+            "    ${it.first}: ${it.second}"
+        }
+    }.joinToString("\n\n") { it }
+}

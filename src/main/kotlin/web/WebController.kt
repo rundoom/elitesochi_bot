@@ -25,7 +25,10 @@ import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.long
 import configs
 import data.getSettings
+import io.ktor.request.header
 import io.ktor.routing.get
+import me.ivmg.telegram.entities.ParseMode
+import java.net.URLDecoder
 
 private val gson = Gson()
 
@@ -69,6 +72,20 @@ fun Application.serve() {
 
             get("/elitesochi/get_settings") {
                 call.respond(getSettings())
+            }
+
+            post("/elitesochi/broadcast_table_data"){
+                val data = gson.fromJson<List<Map<String, String>>>(call.receive(JsonArray::class))
+                val header = URLDecoder.decode(call.request.header("Table-Header")!!, "UTF-8")
+                val chatIds = call.request.header("Chat-Ids")!!.split(';').map { it.toLong() }
+
+                val message = prepareBroadcastMessage(data, header)
+
+                chatIds.parallelStream().forEach {
+                    sendBotMessage(it, message, null)
+                }
+
+                call.respond(HttpStatusCode.OK)
             }
         }
     }
