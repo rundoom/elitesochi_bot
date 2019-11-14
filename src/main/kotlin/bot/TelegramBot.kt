@@ -20,7 +20,7 @@ import java.net.Proxy
 val bot = bot {
     token = configs["bot"]["token"].string
 
-    proxy = if(!configs["bot"]["proxy"].isJsonNull) Proxy(
+    proxy = if (!configs["bot"]["proxy"].isJsonNull) Proxy(
         Proxy.Type.SOCKS,
         InetSocketAddress(configs["bot"]["proxy"]["host"].string, configs["bot"]["proxy"]["port"].int)
     ) else Proxy.NO_PROXY
@@ -46,6 +46,11 @@ fun initTelegramBot() {
     GlobalScope.launch { bot.startPolling() }
 }
 
-fun sendBotMessage(chatId: Long, message: String, parseMode: ParseMode? = ParseMode.MARKDOWN) {
-    bot.sendMessage(chatId, message, parseMode)
+fun sendBotMessage(
+    chatId: Long,
+    message: String,
+    parseMode: ParseMode? = ParseMode.MARKDOWN,
+    disableWebPagePreview: Boolean = false
+) {
+    bot.sendMessage(chatId, message, parseMode, disableWebPagePreview = disableWebPagePreview)
 }
