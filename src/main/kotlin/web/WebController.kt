@@ -1,9 +1,15 @@
 package web
 
-import data.Trainer
+import bot.sendBotMessage
+import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.fromJson
+import com.github.salomonbrys.kotson.get
+import com.github.salomonbrys.kotson.long
 import com.google.gson.Gson
 import com.google.gson.JsonArray
+import configs
+import data.Trainer
+import data.getSettings
 import io.ktor.application.Application
 import io.ktor.application.call
 import io.ktor.application.install
@@ -15,19 +21,13 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.gson.GsonConverter
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.request.header
 import io.ktor.request.receive
+import io.ktor.request.receiveStream
 import io.ktor.response.respond
+import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
-import bot.sendBotMessage
-import com.github.salomonbrys.kotson.array
-import com.github.salomonbrys.kotson.get
-import com.github.salomonbrys.kotson.long
-import configs
-import data.getSettings
-import io.ktor.request.header
-import io.ktor.routing.get
-import me.ivmg.telegram.entities.ParseMode
 import java.net.URLDecoder
 
 private val gson = Gson()
@@ -74,7 +74,7 @@ fun Application.serve() {
                 call.respond(getSettings())
             }
 
-            post("/elitesochi/broadcast_table_data"){
+            post("/elitesochi/broadcast_table_data") {
                 val data = gson.fromJson<List<Map<String, String>>>(call.receive(JsonArray::class))
                 val header = URLDecoder.decode(call.request.header("Table-Header")!!, "UTF-8")
                 val chatIds = call.request.header("Chat-Ids")!!.split(';').map { it.toLong() }
@@ -83,6 +83,18 @@ fun Application.serve() {
 
                 chatIds.parallelStream().forEach {
                     sendBotMessage(it, message, null)
+                }
+
+                call.respond(HttpStatusCode.OK)
+            }
+
+            post("/elitesochi/broadcast_raw_message") {
+                val data = call.receiveStream().bufferedReader().use { it.readText() }
+                val header = call.request.header("Table-Header")?.let { URLDecoder.decode(it, "UTF-8") + "\n\n" } ?: ""
+                val chatIds = call.request.header("Chat-Ids")!!.split(';').map { it.toLong() }
+
+                chatIds.parallelStream().forEach {
+                    sendBotMessage(it, header + data, null)
                 }
 
                 call.respond(HttpStatusCode.OK)
