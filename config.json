@@ -6,12 +6,19 @@
       "port": 9050
     },
     "manager_list": [
-      153174359,
-      897607546,
-      748503298,
-      296921036,
-      769527887,
       153174359
+    ],
+    "procedures": [
+      {
+        "name": "Рассылка зависших в раздаче",
+        "mnemonic": "execute_trainers_stop",
+        "procedure": "[AnalyticData].[dbo].[p_telegram_trainers_stops]"
+      },
+      {
+        "name": "Рассылка электронной почты",
+        "mnemonic": "execute_email_sending",
+        "procedure": "[AnalyticData].[dbo].[p_newbuilding_need_update_email]"
+      }
     ]
   },
   "web": {

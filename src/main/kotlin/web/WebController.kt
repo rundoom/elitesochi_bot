@@ -28,6 +28,7 @@ import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import me.ivmg.telegram.entities.ParseMode
 import java.net.URLDecoder
 
 private val gson = Gson()
@@ -58,13 +59,13 @@ fun Application.serve() {
                 val trainersFullMessages = prepareTrainerFullMessages(trainersMessages, distributionHeader)
 
                 trainersFullMessages.parallelStream().forEach {
-                    sendBotMessage(it.first, it.second)
+                    sendBotMessage(it.first, it.second, ParseMode.HTML)
                 }
 
                 val managerMessage = prepareManagerMessage(trainersSplit, distributionHeader)
 
                 configs["bot"]["manager_list"].array.toList().parallelStream().forEach {
-                    sendBotMessage(it.long, managerMessage)
+                    sendBotMessage(it.long, managerMessage, ParseMode.HTML)
                 }
 
                 call.respond(HttpStatusCode.OK, trainersFullMessages)
@@ -82,7 +83,7 @@ fun Application.serve() {
                 val message = prepareBroadcastMessage(data, header)
 
                 chatIds.parallelStream().forEach {
-                    sendBotMessage(it, message, null)
+                    sendBotMessage(it, message, ParseMode.HTML)
                 }
 
                 call.respond(HttpStatusCode.OK)
@@ -90,11 +91,13 @@ fun Application.serve() {
 
             post("/elitesochi/broadcast_raw_message") {
                 val data = call.receiveStream().bufferedReader().use { it.readText() }
-                val header = call.request.header("Table-Header")?.let { URLDecoder.decode(it, "UTF-8") + "\n\n" } ?: ""
+                val header =
+                    call.request.header("Table-Header")?.let { "<b>${URLDecoder.decode(it, "UTF-8")}\n\n</b>" } ?: ""
+
                 val chatIds = call.request.header("Chat-Ids")!!.split(';').map { it.toLong() }
 
                 chatIds.parallelStream().forEach {
-                    sendBotMessage(it, header + data, null)
+                    sendBotMessage(it, header + data, null, true)
                 }
 
                 call.respond(HttpStatusCode.OK)

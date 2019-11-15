@@ -1,5 +1,6 @@
 package data
 
+import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.string
 import configs
@@ -29,16 +30,11 @@ fun getStuckInDistribution(): List<Deal> {
     }
 }
 
-fun executeTrainersStop() {
-    transaction {
-        connection.createStatement().execute("{call [AnalyticData].[dbo].[p_telegram_trainers_stops]}")
-    }
-}
+fun executeProcedureFromList(mnemonic: String) {
+    val procedureCommand =
+        configs["bot"]["procedures"].array.find { it["mnemonic"].string == mnemonic }!!["procedure"].string
 
-fun executeEmailSending() {
-    transaction {
-        connection.createStatement().execute("{call [AnalyticData].[dbo].[p_newbuilding_need_update_email]}")
-    }
+    transaction { connection.createStatement().execute("{call $procedureCommand}") }
 }
 
 fun getSettings(): List<Setting> {
