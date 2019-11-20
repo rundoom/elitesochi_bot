@@ -97,7 +97,7 @@ fun Application.serve() {
                 val chatIds = call.request.header("Chat-Ids")!!.split(';').map { it.toLong() }
 
                 chatIds.parallelStream().forEach {
-                    sendBotMessage(it, header + data, null, true)
+                    sendBotMessage(it, header + data, ParseMode.HTML, true)
                 }
 
                 call.respond(HttpStatusCode.OK)
