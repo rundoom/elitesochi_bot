@@ -28,6 +28,7 @@ import io.ktor.response.respond
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.routing
+import io.ktor.util.escapeHTML
 import me.ivmg.telegram.entities.ParseMode
 import java.net.URLDecoder
 
@@ -77,7 +78,7 @@ fun Application.serve() {
 
             post("/elitesochi/broadcast_table_data") {
                 val data = gson.fromJson<List<Map<String, String>>>(call.receive(JsonArray::class))
-                val header = URLDecoder.decode(call.request.header("Table-Header")!!, "UTF-8")
+                val header = URLDecoder.decode(call.request.header("Table-Header")!!.escapeHTML(), "UTF-8")
                 val chatIds = call.request.header("Chat-Ids")!!.split(';').map { it.toLong() }
 
                 val message = prepareBroadcastMessage(data, header)
@@ -92,12 +93,12 @@ fun Application.serve() {
             post("/elitesochi/broadcast_raw_message") {
                 val data = call.receiveStream().bufferedReader().use { it.readText() }
                 val header =
-                    call.request.header("Table-Header")?.let { "<b>${URLDecoder.decode(it, "UTF-8")}\n\n</b>" } ?: ""
+                    call.request.header("Table-Header")?.let { "<b>${URLDecoder.decode(it, "UTF-8").escapeHTML()}\n\n</b>" } ?: ""
 
                 val chatIds = call.request.header("Chat-Ids")!!.split(';').map { it.toLong() }
 
                 chatIds.parallelStream().forEach {
-                    sendBotMessage(it, header + data, ParseMode.HTML, true)
+                    sendBotMessage(it, header + data.escapeHTML(), ParseMode.HTML, true)
                 }
 
                 call.respond(HttpStatusCode.OK)
