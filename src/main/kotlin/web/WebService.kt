@@ -52,6 +52,6 @@ fun prepareBroadcastMessageSingleField(tableData: List<Map<String, String>>, hea
     return "<b>$header: ${tableData.size}</b>\n" + tableData.map {
         it.toList().single()
     }.joinToString("\n") {
-        "- ${it.first}: ${it.second}"
+        "- ${it.first}:   ${it.second}"
     }
 }
