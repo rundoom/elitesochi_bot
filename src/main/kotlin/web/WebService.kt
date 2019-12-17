@@ -47,3 +47,11 @@ fun prepareBroadcastMessage(tableData: List<Map<String, String>>, header: String
         }
     }.joinToString("\n\n") { it }
 }
+
+fun prepareBroadcastMessageSingleField(tableData: List<Map<String, String>>, header: String): String {
+    return "<b>$header: ${tableData.size}</b>\n" + tableData.map {
+        it.toList().single()
+    }.joinToString("\n") {
+        "- ${it.first}: ${it.second}"
+    }
+}
