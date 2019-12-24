@@ -60,9 +60,4 @@ shadowJar {
         from 'config.json'
         into "${libsDir.path}"
     }
-
-    copy {
-        from 'templates'
-        into "${libsDir.path}/templates"
-    }
 }

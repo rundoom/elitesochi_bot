@@ -30,6 +30,7 @@ fun Application.serve() {
             sendStuckInDistribution()
             getSettings()
             broadcastTableData()
+            broadcastTableDataCustomFormat()
             broadcastRawMessage()
         }
     }

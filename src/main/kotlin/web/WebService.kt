@@ -38,3 +38,16 @@ fun applyFromHbs(data: Any, rawTemplate: String, header: String?): String {
 
     return template.apply(context)
 }
+
+fun applyFromHbsFile(data: Any, filePath: String, header: String?): String {
+    val template = handlebars.compile(filePath)
+
+    val hbsData = HBSHolder(data, header)
+
+    val context = Context
+        .newBuilder(hbsData)
+        .resolver(MethodValueResolver.INSTANCE, FieldValueResolver.INSTANCE)
+        .build()
+
+    return template.apply(context)
+}
