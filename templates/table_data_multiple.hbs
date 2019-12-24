@@ -1,0 +1,8 @@
+<b>{{header}}</b>
+
+{{#each data~}}
+    {{inc @index}}.
+    {{#each this~}}
+        <b>{{@key}}:</b> {{this}}
+    {{/each}}
+{{/each}}

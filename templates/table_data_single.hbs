@@ -1,0 +1,7 @@
+<b>{{header}}: {{data.size}}</b>
+
+{{#each data~}}
+    {{#each this~}}
+        - {{@key}}:    {{this~}}
+    {{/each}}
+{{/each}}

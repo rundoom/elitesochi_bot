@@ -10,3 +10,5 @@ data class Trainer(
     @SerializedName("USER_SEGMENT") val segment: String,
     @SerializedName("PHONE") val phone: String
 )
+
+data class HBSHolder(val data: Any, val header: String? = null)

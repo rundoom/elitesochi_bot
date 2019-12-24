@@ -1,0 +1,10 @@
+<b>{{header~}}:</b>
+{{#each data.stucks~}}
+{{ruleName}}: {{dealCount~}}
+{{/each}}
+----------------------
+<b>ИХ МОЖНО ПРИЗВАТЬ:</b>
+
+{{#each data.trainers~}}
+{{@key}}: {{#each this}} {{@key}}: {{this}}{{/each}}
+{{/each}}

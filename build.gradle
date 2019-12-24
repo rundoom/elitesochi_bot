@@ -39,6 +39,8 @@ dependencies {
     implementation 'org.slf4j:slf4j-log4j12:1.7.5'
     implementation 'io.github.microutils:kotlin-logging:1.7.6'
 
+    implementation 'com.github.jknack:handlebars:4.1.2'
+
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
@@ -57,5 +59,10 @@ shadowJar {
     copy {
         from 'config.json'
         into "${libsDir.path}"
+    }
+
+    copy {
+        from 'templates'
+        into "${libsDir.path}/templates"
     }
 }
