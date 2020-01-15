@@ -51,10 +51,12 @@ val bot = bot {
         }
 
         callbackQuery(procedurePrefix) { bot, update ->
-            update.callbackQuery?.let {
-                val chatId = it.message?.chat?.id ?: return@callbackQuery
-                executeProcedureFromList(it.data.substringAfter(procedurePrefix))
-                bot.sendMessage(chatId = chatId, text = "Процедура ${it.data} исполнена")
+            GlobalScope.launch {
+                update.callbackQuery?.let {
+                    val chatId = it.message?.chat?.id ?: return@launch
+                    executeProcedureFromList(it.data.substringAfter(procedurePrefix))
+                    bot.sendMessage(chatId = chatId, text = "Процедура ${it.data} исполнена")
+                }
             }
         }
     }
@@ -75,6 +77,11 @@ fun sendBotMessage(
 
 fun generateButtons(): List<List<InlineKeyboardButton>> {
     return configs["bot"]["procedures"].array.map {
-        listOf(InlineKeyboardButton(text = it["name"].string, callbackData = "$procedurePrefix${it["mnemonic"].string}"))
+        listOf(
+            InlineKeyboardButton(
+                text = it["name"].string,
+                callbackData = "$procedurePrefix${it["mnemonic"].string}"
+            )
+        )
     }
 }
