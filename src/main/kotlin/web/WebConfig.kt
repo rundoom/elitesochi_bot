@@ -16,7 +16,7 @@ fun Application.serve() {
         basic("SQL Server") {
             realm = "ktor"
             validate { credentials ->
-                if (credentials.password == hardcodedUserCredentials[credentials.name])
+                if (credentials.password == userCredentials[credentials.name])
                     UserIdPrincipal(credentials.name) else null
             }
         }

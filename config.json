@@ -34,5 +34,11 @@
     "keyAlias": "mykey",
     "keyStorePassword": "changeit",
     "privateKeyPassword": "changeit"
-  }
+  },
+  "credentials": [
+    {
+      "username": "SQLServer",
+      "password": "yTmLA(=8PRyjv;PP"
+    }
+  ]
 }

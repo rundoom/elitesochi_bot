@@ -1,5 +1,6 @@
 package web
 
+import com.github.salomonbrys.kotson.array
 import com.github.salomonbrys.kotson.get
 import com.github.salomonbrys.kotson.int
 import com.github.salomonbrys.kotson.string
@@ -12,7 +13,7 @@ import io.ktor.server.engine.sslConnector
 import io.ktor.server.netty.Netty
 import java.io.File
 
-val hardcodedUserCredentials = mapOf<String?, String>("SQLServer" to "yTmLA(=8PRyjv;PP")
+val userCredentials = configs["credentials"].array.map { it["username"].string to it["password"].string }.toMap()
 
 fun startServer() {
     val file = File("sert/temporary.jks")
