@@ -1,6 +1,6 @@
 {
   "bot": {
-    "token": "999140102:AAGEEMIX9P0udqdGGFwNopaLCeXJxdSuJHY",
+    "token": "{token}",
     "proxy": {
       "host": "10.10.1.91",
       "port": 9050
@@ -28,7 +28,7 @@
   "data": {
     "jdbc_url": "jdbc:sqlserver://195.123.175.230:11433",
     "user": "telegram_bot",
-    "password": "TS^gvS^StS8S8HS5SZ6tzxgx66ss6"
+    "password": "{password}"
   },
   "ssl": {
     "keyAlias": "mykey",
@@ -38,7 +38,7 @@
   "credentials": [
     {
       "username": "SQLServer",
-      "password": "yTmLA(=8PRyjv;PP"
+      "password": "{password}"
     }
   ]
 }
